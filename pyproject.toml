@@ -3,6 +3,9 @@ name = "cg-bundler"
 version = "0.1.0"
 description = ""
 authors = ["Daniel Trowbridge <blujupiter32@pm.me>"]
+packages = [
+    {include = "bundler"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
