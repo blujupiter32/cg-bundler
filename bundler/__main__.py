@@ -4,6 +4,18 @@ import argparse
 import os
 
 
+def bundle_file(source_path, separator, dest_file):
+    with open(source_path) as source_file:
+        for line in source_file:
+            if separator in line:
+                replacement = line.replace(separator, source_path)
+                dest_file.write(replacement)
+                break
+        else:
+            source_file.seek(0)
+        dest_file.write(source_file.read())
+
+
 def source_paths(triple, extension):
     for filename in triple[2]:
         if os.path.splitext(filename)[1] == extension:
@@ -37,3 +49,10 @@ paths = (
     for triple in os.walk(root)
     for path in source_paths(triple, extension)
 )
+
+with open("bundle" + extension, "w") as dest_file:
+    for path in paths:
+        bundle_file(path, args.s, dest_file)
+        dest_file.write("\n")
+    bundle_file(args.main, args.s, dest_file)
+    dest_file.flush()
