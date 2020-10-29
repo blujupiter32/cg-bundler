@@ -16,11 +16,11 @@ def bundle_file(source_path, separator, dest_file):
         dest_file.write(source_file.read())
 
 
-def source_paths(triple, extension):
+def source_paths(triple, extension, main):
     for filename in triple[2]:
         if os.path.splitext(filename)[1] == extension:
             path = os.path.join(triple[0], filename)
-            if path != args.main:
+            if path != main:
                 yield path
 
 
@@ -40,19 +40,23 @@ parser.add_argument(
     metavar="SEP",
 )
 
-args = parser.parse_args()
+def main():
+    args = parser.parse_args()
 
-extension = os.path.splitext(args.main)[1]
-paths = (
-    path
-    for root in args.directories
-    for triple in os.walk(root)
-    for path in source_paths(triple, extension)
-)
+    extension = os.path.splitext(args.main)[1]
+    paths = (
+        path
+        for root in args.directories
+        for triple in os.walk(root)
+        for path in source_paths(triple, extension, args.main)
+    )
 
-with open("bundle" + extension, "w") as dest_file:
-    for path in paths:
-        bundle_file(path, args.s, dest_file)
-        dest_file.write("\n")
-    bundle_file(args.main, args.s, dest_file)
-    dest_file.flush()
+    with open("bundle" + extension, "w") as dest_file:
+        for path in paths:
+            bundle_file(path, args.s, dest_file)
+            dest_file.write("\n")
+        bundle_file(args.main, args.s, dest_file)
+        dest_file.flush()
+
+if __name__ == "__main__":
+    main()
