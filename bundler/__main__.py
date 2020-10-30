@@ -1,4 +1,6 @@
 # Copyright 2020 Daniel Trowbridge
+#
+# Released under the MIT License (see ../LICENSE)
 
 import argparse
 import os
